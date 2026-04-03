@@ -12,16 +12,16 @@ Meeting transcripts are write-once, read-never. They're locked inside calendar a
 
 ## The Solution
 
-A local SQLite database that turns months of meeting history into instant, queryable institutional knowledge — optimized for AI agent consumption.
+A local SQLite database that turns months of meeting history into instant, queryable institutional knowledge - optimized for AI agent consumption.
 
 ## Features
 
-- **Full-text search** — FTS5 with porter stemming and unicode61 tokenization across all transcript chunks
-- **Auto-tagging** — ~50 configurable regex-based keyword tags applied on ingest, zero manual curation
-- **Expert discovery** — Weighted ranking algorithm that identifies subject-matter experts from speaker, organizer, and action-item signals
-- **Action item extraction** — Parses owners and due dates from transcript chunks; generates structured payloads for calendar events, reminder emails, and channel notifications
-- **Attachment search** — Converts meeting attachments (PDF, PPTX, DOCX, XLSX, images) to Markdown via [Markitdown](https://github.com/microsoft/markitdown) and indexes alongside transcripts
-- **Chunked storage** — Topic-level summaries, not verbatim transcripts — dramatically more token-efficient and produces better search results
+- **Full-text search** - FTS5 with porter stemming and unicode61 tokenization across all transcript chunks
+- **Auto-tagging** - ~50 configurable regex-based keyword tags applied on ingest, zero manual curation
+- **Expert discovery** - Weighted ranking algorithm that identifies subject-matter experts from speaker, organizer, and action-item signals
+- **Action item extraction** - Parses owners and due dates from transcript chunks; generates structured payloads for calendar events, reminder emails, and channel notifications
+- **Attachment search** - Converts meeting attachments (PDF, PPTX, DOCX, XLSX, images) to Markdown via [Markitdown](https://github.com/microsoft/markitdown) and indexes alongside transcripts
+- **Chunked storage** - Topic-level summaries, not verbatim transcripts - dramatically more token-efficient and produces better search results
 
 ## Architecture
 
@@ -36,7 +36,7 @@ Action Items (extracted) ──► Structured payloads (Calendar / Mail / Teams)
                            └─► Expert discovery signals
 ```
 
-**Key design choice:** Store topic-level summaries, not verbatim transcripts. Each chunk is a coherent topic — better search relevance, dramatically lower token cost when consumed by AI agents.
+**Key design choice:** Store topic-level summaries, not verbatim transcripts. Each chunk is a coherent topic - better search relevance, dramatically lower token cost when consumed by AI agents.
 
 ### Project Structure
 
@@ -56,7 +56,7 @@ Meeting Transcript Store/
 
 | Table | Purpose |
 |-------|---------|
-| `meetings` | Meeting metadata — title, date, organizer, attendees, duration |
+| `meetings` | Meeting metadata - title, date, organizer, attendees, duration |
 | `transcript_chunks` | Topic-level sections with type, content, speaker, sort order |
 | `tags` | Tag dictionary (~50 configurable domain keywords) |
 | `meeting_tags` | Meeting ↔ tag many-to-many |
@@ -86,10 +86,10 @@ CREATE VIRTUAL TABLE chunks_fts USING fts5(
 );
 ```
 
-- **Porter stemming** — `"virtualizing"` matches `"virtual"`, `"securing"` matches `"security"`
-- **Unicode61 tokenizer** — Case-insensitive, handles international characters
-- **Content table linking** — FTS5 reads from physical table (saves disk space)
-- **Auto-sync triggers** — INSERT/DELETE triggers keep the index consistent
+- **Porter stemming** - `"virtualizing"` matches `"virtual"`, `"securing"` matches `"security"`
+- **Unicode61 tokenizer** - Case-insensitive, handles international characters
+- **Content table linking** - FTS5 reads from physical table (saves disk space)
+- **Auto-sync triggers** - INSERT/DELETE triggers keep the index consistent
 
 ## CLI Commands
 
@@ -134,7 +134,7 @@ node action-items.mjs complete <action-item-id>  # Mark as done
 ### Bulk Ingestion
 
 ```bash
-node ingest-bulk.mjs    # Idempotent — safe to re-run (upserts by meeting ID)
+node ingest-bulk.mjs    # Idempotent - safe to re-run (upserts by meeting ID)
 ```
 
 ## JavaScript API
@@ -186,8 +186,8 @@ Results are ranked by weighted score, then meeting count. Evidence snippets are 
 ```
 1. Jane Smith  (score: 24, 8 meetings, last active: 2025-03-09)
    Signal types: speaker, organizer, action-item-owner
-   [speaker] Architecture Review (2025-03-09) — "...authentication requirements..."
-   [organizer] Weekly Sync (2025-02-09) — Organized meeting
+   [speaker] Architecture Review (2025-03-09) - "...authentication requirements..."
+   [organizer] Weekly Sync (2025-02-09) - Organized meeting
 ```
 
 ## Action Item Payloads
@@ -248,16 +248,16 @@ node db.mjs find-experts "your topic"
 
 | Package | Purpose |
 |---------|---------|
-| [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) | Synchronous SQLite3 bindings for Node.js — enables FTS5 virtual tables |
+| [`better-sqlite3`](https://github.com/WiseLibs/better-sqlite3) | Synchronous SQLite3 bindings for Node.js - enables FTS5 virtual tables |
 
 ## How It Compounds
 
 | Meetings Ingested | Capability |
 |-------------------|------------|
-| **5** | Basic search — find specific discussions |
+| **5** | Basic search - find specific discussions |
 | **15** | Expert finder produces meaningful rankings |
-| **30+** | Institutional knowledge — *"What did we decide about X last quarter?"* is answerable |
-| **50+** | Pattern detection — recurring topics, key contributors, decision history |
+| **30+** | Institutional knowledge - *"What did we decide about X last quarter?"* is answerable |
+| **50+** | Pattern detection - recurring topics, key contributors, decision history |
 
 The database is append-mostly. Each new meeting enriches every query. Auto-tagging and FTS5 indexing mean zero manual curation after ingestion.
 
@@ -266,7 +266,7 @@ The database is append-mostly. Each new meeting enriches every query. Auto-taggi
 | Issue | Workaround |
 |-------|-----------|
 | FTS5 treats hyphens as `NOT` operator | Quote hyphenated terms: `"auto-tag"` not `auto-tag` |
-| OLE2/DRM-protected files | Markitdown may fail on DRM-locked `.docx` — use alternative conversion |
+| OLE2/DRM-protected files | Markitdown may fail on DRM-locked `.docx` - use alternative conversion |
 | Decision chunks may produce false positive action items | Filter to `action_item` chunk type for precision |
 
 ---
