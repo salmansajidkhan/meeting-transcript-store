@@ -1,0 +1,18 @@
+node_modules/
+__pycache__/
+*.pyc
+
+# Database — SENSITIVE (meeting transcripts)
+store.db
+*.sqlite
+*.sqlite3
+
+# Env / secrets
+.env
+.env.*
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+Thumbs.db

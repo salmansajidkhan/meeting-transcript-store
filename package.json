@@ -1,0 +1,15 @@
+{
+  "name": "meeting-transcript-store",
+  "version": "1.0.0",
+  "description": "Persistent, searchable store of meeting transcript data optimized for AI agent (Copilot CLI) consumption.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^12.6.2"
+  }
+}
